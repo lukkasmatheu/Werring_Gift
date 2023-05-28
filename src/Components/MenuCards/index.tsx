@@ -1,5 +1,5 @@
 import React from 'react';
-import {Card} from './styles';
+import { Card } from './styles';
 
 export interface MenuCardsProps {
     to?: string;
@@ -15,7 +15,7 @@ const MenuCards: React.FC<MenuCardsProps> = ({
     description,
 }) => {
     return (
-        <Card to={to} title={description} tabindex="0">
+        <Card to={to!} title={description} >
             <div>
                 <img src={image} alt={description} />
                 <p>{title}</p>

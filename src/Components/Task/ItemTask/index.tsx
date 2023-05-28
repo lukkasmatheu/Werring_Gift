@@ -1,36 +1,38 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 
-import {TaskProperties} from '../../../models/TaskModel';
+import { PresentesProperties } from '../../../models/TaskModel';
 
-import {List, Container} from './styles';
+import { List, Container } from './styles';
 
-const ItemList: React.FC<TaskProperties> = ({
+const ItemList: React.FC<PresentesProperties> = ({
     id,
-    task,
-    description,
-    date,
+    presente,
+    descricao,
     complete,
-    children,
+    image,
+    valor,
+    children
 }) => {
     const [open, setOpen] = useState<boolean>(true);
+    console.log(complete);
     return (
-        <List complete={complete} open={open} id={id}>
+        <List complete={complete} open={open}>
             <Container
                 complete={complete}
                 onClick={() => {
                     setOpen(!open);
                 }}>
                 <div className={'task'}>
-                    <h4>Tarefa:</h4>
-                    <p>{task}</p>
-                    <span>{date}</span>
+                    <h4>Presente:</h4>
+                    <p>{presente}</p>
+                    <span>{valor}</span>
                 </div>
                 {children}
             </Container>
             <div className={'description'}>
                 <div>
                     <h4>Descrição:</h4>
-                    <p>{description}</p>
+                    <p>{descricao}</p>
                 </div>
             </div>
         </List>

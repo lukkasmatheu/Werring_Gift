@@ -1,42 +1,51 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import BoxConteiner from '../../Components/Conteiner';
-import {useHistory} from 'react-router-dom';
-import {postTask} from '../../services/api';
-import {Form} from './styles';
+import { useNavigate } from 'react-router-dom';
+import { Form } from './styles';
+import { addDoc, collection } from 'firebase/firestore';
+import { db } from '../../App';
 
-//TODO : refatorar modelo de form com formik
 
 const CreateTask: React.FC = () => {
-    const history = useHistory();
+    const navigate = useNavigate();
+    const [valorPresente, setValorPresente] = useState<string>();
     const [taskDate, setTaskDate] = useState<string>();
     const [taskTitle, setTaskTitle] = useState<string>();
     const [taskDescription, setTaskDescription] = useState<string>();
+    const colletionDataBase = collection(db, "presentes")
     const handleSubmit = async () => {
-        history.push('/');
-        postTask(taskTitle, taskDescription, taskDate)
-            .then(() => {
-                alert('TAREFA CRIADA COM SUCESSO');
-            })
-            .catch(() => {
-                alert('Error ao enviar tarefa');
-                console.error('Error ao enviar pedido');
+        try {
+            const presente = await addDoc(colletionDataBase, {
+                presente: taskTitle,
+                descricao: taskDescription,
+                valor: valorPresente,
+                complete: false,
+                image: taskDate,
             });
+
+            console.log("dados salvos com sucessos", presente);
+            alert("solicitação de presente criado com sucesso");
+        } catch (e) {
+            console.error("Error adding document: ", e);
+        } finally {
+            navigate('/');
+        }
     };
     return (
         <BoxConteiner header={'Criar Nova Tarefa'}>
             <Form onSubmit={handleSubmit}>
-                <label htmlFor="text-input">Qual é a tarefa:</label>
+                <label htmlFor="text-input">Qual é o presente:</label>
                 <input
                     type="text"
                     name="text-input"
-                    placeholder={'Tarefa a ser realizada'}
+                    placeholder={'Insira o presente que gostaria'}
                     value={taskTitle}
                     onChange={(e) => {
                         setTaskTitle(e.target.value);
                     }}
                 />
 
-                <label htmlFor="text-input">Descrição da tarefa:</label>
+                <label htmlFor="text-input">Descrição do Presente:</label>
                 <textarea
                     id="text-input"
                     rows={10}
@@ -46,21 +55,32 @@ const CreateTask: React.FC = () => {
                         setTaskDescription(e.target.value);
                     }}
                     placeholder={
-                        'Insira uma descrição para a tarefa que deseja criar'
+                        'Insira uma descrição para a o presente que deseja receber'
                     }
                 />
 
                 <label htmlFor="text-input">
-                    Data de realização da tarefa:
+                    Imagem do Presente:
                 </label>
                 <input
-                    type="date"
+                    type="input"
                     name="data-input"
-                    id="date"
-                    min={new Date().toLocaleDateString()}
+                    placeholder='Insira um link da imagem do presente que gostaria'
                     value={taskDate}
                     onChange={(e) => {
                         setTaskDate(e.target.value);
+                    }}
+                />
+                <label htmlFor="text-input">
+                    Imagem do Presente:
+                </label>
+                <input
+                    type="input"
+                    name="data-input"
+                    placeholder='Insira um valor aproximado do presente que deseja ganhar'
+                    value={valorPresente}
+                    onChange={(e) => {
+                        setValorPresente(e.target.value);
                     }}
                 />
 

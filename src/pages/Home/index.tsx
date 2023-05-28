@@ -1,5 +1,5 @@
-import React, {useEffect, useState} from 'react';
-import {Main, Footer} from './styles';
+import React, { useState } from 'react';
+import { Main, Footer } from './styles';
 import MenuCards from '../../Components/MenuCards';
 
 import tarefasConcluidas from '../../assets/concluir.svg';
@@ -8,48 +8,30 @@ import createTask from '../../assets/task.svg';
 import editTask from '../../assets/lista-de-tarefas.svg';
 import listTask from '../../assets/lista-de-controle.svg';
 import BoxConteiner from '../../Components/Conteiner';
-import {getTasks} from '../../services/api';
 
 const Home: React.FC = () => {
     const [completeTask, setCompleteTask] = useState<number>(0);
     const [taskNumber, setTaskNumber] = useState<number>(0);
-    useEffect(() => {
-        getTasks()
-            .then((res) => {
-                console.log(res.data);
-                return res.data;
-            })
-            .then((res) => {
-                setTaskNumber(res.length);
-                let total = 0;
-                for (const task of res) {
-                    if (task.complete) {
-                        total++;
-                    }
-                }
-                setCompleteTask(total);
-            })
-            .catch((err) => console.error(err));
-    }, []);
+
 
     return (
-        <BoxConteiner header={'Gerenciador de Tarefas'}>
+        <BoxConteiner header={'Gerenciador de Presentes'}>
             <Main>
                 <MenuCards
                     to={'/create'}
-                    title={'Criar Nova Tarefa'}
+                    title={'Criar Novo Presente'}
                     image={createTask}
                     description={'Link para pagina de criação de novas taredas'}
                 />
                 <MenuCards
                     to={'/list'}
-                    title={'Listar Tarefas'}
+                    title={'Listar Presentes'}
                     image={listTask}
                     description={'Link para pagina de listagem de tarefas'}
                 />
                 <MenuCards
                     to={'/edit'}
-                    title={'Editar Tarefas'}
+                    title={'Editar Presentes'}
                     image={editTask}
                     description={
                         'Link para pagina de edição exclusão de tarefas'
@@ -63,14 +45,14 @@ const Home: React.FC = () => {
                             src={tarefas}
                             alt="Alerta de quantidade de tarefas criadas"
                         />
-                        {taskNumber} - <b> Tarefas </b>{' '}
+                        {taskNumber} - <b> presentes criados </b>{' '}
                     </span>
                     <span>
                         <img
                             src={tarefasConcluidas}
                             alt="Alerta de quantidade de tarefas concluidas"
                         />
-                        {completeTask} - <b>Tarefas Prontas </b>{' '}
+                        {completeTask} - <b>Presentes Atribuidos </b>{' '}
                     </span>
                 </section>
             </Footer>

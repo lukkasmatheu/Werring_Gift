@@ -22,11 +22,13 @@ export const List = styled.li<{ complete?: boolean, open?: boolean }>`
     }
     .description {
         ${(props) => (props.open ? 'display:none' : '')};
+        animation: all 1s linear;
         padding: 3px 8px;
     }
 `;
 
-export const Container = styled.div`
+
+export const Container = styled.div<{ complete?: boolean }>`
     display: flex;
     margin: 0;
     align-items: center;
@@ -36,4 +38,7 @@ export const Container = styled.div`
     border-radius: 4px;
     background: ${(props) => (props.complete ? '#28c8289e' : '#e5ece5')};
     padding: 3px 8px;
+    .task{
+        display:inline-nlock;
+    }
 `;

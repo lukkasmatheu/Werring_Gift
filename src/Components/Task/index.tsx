@@ -1,14 +1,15 @@
-import React, {Suspense, lazy, useEffect, useState} from 'react';
-import {deleteTask, getTasks, patchTask} from '../../services/api';
+import React, { Suspense, lazy, useEffect, useState } from 'react';
 
-import {TaskProperties} from '../../models/TaskModel';
+import { PresentesProperties } from '../../models/TaskModel';
 import Button from '../Button';
 
 import concluir from '../../assets/concluir.svg';
 import excluir from '../../assets/excluir.svg';
 
-import {ButtonContainer, TaskList} from './styles';
+import { ButtonContainer, TaskList } from './styles';
 import Loading from '../../Components/Loading';
+import { collection, deleteDoc, doc, getDocs } from 'firebase/firestore';
+import { db } from '../../App';
 
 const ItemList = lazy(() => import('./ItemTask/index'));
 
@@ -16,50 +17,51 @@ interface Tasksprop {
     buttonsActive?: boolean;
 }
 
-const Task: React.FC<Tasksprop> = ({buttonsActive = false}) => {
-    const [tasks, setTasks] = useState<TaskProperties[]>([]);
-    const concluirTask = (index, id) => {
-        patchTask(id)
-            .then(() => {
-                const arr = Array.from(tasks);
-                arr[index].complete = true;
-                setTasks(arr);
-            })
-            .catch((err) => console.error(err));
+const Task: React.FC<Tasksprop> = ({ buttonsActive = true }) => {
+    const [presentes, setPresentes] = useState<PresentesProperties[]>([]);
+    const concluirTask = (index: number, id: string) => {
+
+        const arr = Array.from(presentes);
+        arr[index].complete = true;
+        setPresentes(arr);
     };
-    const excluirTask = (index, id) => {
-        deleteTask(id)
-            .then(() => {
-                const arr = Array.from(tasks);
-                arr.splice(index, 1);
-                setTasks(arr);
-            })
-            .catch((err) => console.error(err));
+    const excluirTask = async (index: number, id: string) => {
+        const userDoc = doc(db, "users", id);
+        await deleteDoc(userDoc);
+        const arr = Array.from(presentes);
+        arr.splice(index, 1);
+        setPresentes(arr);
     };
 
+    const colletionDataBase = collection(db, "presentes")
+
     useEffect(() => {
-        getTasks()
-            .then((res) => {
-                console.log(res.data);
-                return res.data;
-            })
-            .then((res) => {
-                setTasks(res);
-            })
-            .catch((err) => console.error(err));
-    }, []);
+        const getPresentes = async () => {
+            const data = await getDocs(colletionDataBase);
+            const destructValue = data.docs.map((doc) => ({ ...doc.data(), id: doc.id })) as PresentesProperties[];
+            setPresentes(destructValue)
+        }
+        getPresentes()
+    }, [])
 
     return (
         <TaskList>
-            {tasks.map(({id, task, description, date, complete}, index) => (
+            {presentes.map(({ id,
+                presente,
+                descricao,
+                complete,
+                image,
+                valor }
+                , index) => (
                 <Suspense fallback={<Loading />} key={id}>
                     <ItemList
-                        key={id}
                         id={id}
-                        task={task}
-                        description={description}
-                        date={date}
-                        complete={complete}>
+                        presente={presente}
+                        descricao={descricao}
+                        complete={complete}
+                        image={image}
+                        valor={valor}
+                    >
                         {buttonsActive && (
                             <ButtonContainer>
                                 {!complete && (

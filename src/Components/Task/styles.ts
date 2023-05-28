@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 export const TaskList = styled.ol`
-    width: 95%;
+    width: 700px;
     padding: 0;
     list-style: none;
     overflow: auto;

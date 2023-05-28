@@ -1,10 +1,10 @@
 import React from 'react';
 import BoxConteiner from '../../Components/Conteiner';
 import Task from '../../Components/Task';
-import Loading from '../../Components/Loading';
+import Presente from '../../assets/presente.svg'
 const ListTask: React.FC = () => {
     return (
-        <BoxConteiner header={'Listar Tarefas'}>
+        <BoxConteiner header={'Lista de Presentes'} image={Presente}>
             <Task />
         </BoxConteiner>
     );

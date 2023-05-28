@@ -1,5 +1,14 @@
-import styled, {keyframes} from 'styled-components';
-import {Link} from 'react-router-dom';
+import styled, { keyframes } from 'styled-components';
+import { Link } from 'react-router-dom';
+
+interface Props {
+    o?: {
+        fundo: string,
+        largura: string,
+        altura: string,
+        cor: string
+    }
+}
 
 const animationBorder = keyframes`
     0%{
@@ -14,7 +23,7 @@ const animationBorder = keyframes`
 
 `;
 
-export const Card = styled(Link)`
+export const Card = styled(Link) <Props>`
     display: flex;
     align-items: center;
     justify-content: space-around;
